@@ -1,12 +1,156 @@
+아래는 브라우저에서 바로 실행할 수 있는 **단일 HTML 파일**입니다.
+공을 클릭해서 점수를 올리는 간단한 게임입니다. 제한 시간은 30초이며, 게임이 끝나면 최종 점수가 표시됩니다.
+
+```html
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My First Git page Open</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>클릭 게임</title>
+
+<style>
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        font-family:Arial, sans-serif;
+    }
+
+    body{
+        background:#222;
+        color:white;
+        text-align:center;
+        overflow:hidden;
+    }
+
+    h1{
+        margin-top:20px;
+    }
+
+    #info{
+        margin:15px;
+        font-size:22px;
+    }
+
+    #game{
+        position:relative;
+        width:100vw;
+        height:80vh;
+        overflow:hidden;
+    }
+
+    #ball{
+        position:absolute;
+        width:70px;
+        height:70px;
+        border-radius:50%;
+        background:linear-gradient(135deg,#ff6b6b,#ffcc00);
+        cursor:pointer;
+        box-shadow:0 0 15px rgba(255,255,255,.6);
+        transition:0.1s;
+    }
+
+    #ball:hover{
+        transform:scale(1.1);
+    }
+
+    #startBtn{
+        padding:12px 24px;
+        font-size:18px;
+        border:none;
+        border-radius:10px;
+        background:#00c853;
+        color:white;
+        cursor:pointer;
+        margin-top:10px;
+    }
+
+    #message{
+        margin-top:15px;
+        font-size:24px;
+        color:#ffd54f;
+    }
+</style>
+
 </head>
 <body>
-    <h1>Hello My Page</h1>
-    <h2>Welcome</h2>
+
+<h1>🎯 클릭 게임</h1>
+
+<div id="info">
+점수 : <span id="score">0</span> |
+남은 시간 : <span id="time">30</span>초
+</div>
+
+<button id="startBtn">게임 시작</button>
+
+<div id="game">
+    <div id="ball" style="display:none;"></div>
+</div>
+
+<div id="message"></div>
+
+<script>
+let score = 0;
+let time = 30;
+let timer;
+let playing = false;
+
+const ball = document.getElementById("ball");
+const game = document.getElementById("game");
+
+function moveBall(){
+    const maxX = game.clientWidth - 70;
+    const maxY = game.clientHeight - 70;
+
+    const x = Math.random()*maxX;
+    const y = Math.random()*maxY;
+
+    ball.style.left = x + "px";
+    ball.style.top = y + "px";
+}
+
+ball.addEventListener("click",()=>{
+    if(!playing) return;
+
+    score++;
+    document.getElementById("score").textContent=score;
+    moveBall();
+});
+
+document.getElementById("startBtn").addEventListener("click",()=>{
+
+    score=0;
+    time=30;
+    playing=true;
+
+    document.getElementById("score").textContent=score;
+    document.getElementById("time").textContent=time;
+    document.getElementById("message").textContent="";
+
+    ball.style.display="block";
+    moveBall();
+
+    clearInterval(timer);
+
+    timer=setInterval(()=>{
+        time--;
+        document.getElementById("time").textContent=time;
+
+        if(time<=0){
+            clearInterval(timer);
+            playing=false;
+            ball.style.display="none";
+            document.getElementById("message").textContent=
+            `🎉 게임 종료! 최종 점수 : ${score}점`;
+        }
+    },1000);
+});
+</script>
+
 </body>
 </html>
+```
+
+이 파일을 `game.html`로 저장한 뒤 브라우저에서 열면 바로 플레이할 수 있습니다.
